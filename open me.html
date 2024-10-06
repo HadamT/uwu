@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hi uy</title>
+    <style>
+        @import url('https://fonts.cdnfonts.com/css/cheri');
+
+        body {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: cheri;
+            color: red;
+            overflow: hidden;
+            position: relative;
+        }
+
+        #questionScreen {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            border-radius: 10px;
+            margin-top: 20px;
+            width: 100px;
+            font-size: 20px;
+            font-family: cheri;
+            border: none;
+            padding: 20px;
+            transition: 0.3s ease-in-out;
+        }
+
+        #Yes:hover {
+            background-color: green;
+            color: white;
+        }
+
+        #No:hover {
+            background-color: red;
+            color: white;
+        }
+
+        .slideshow-container {
+            width: 300px;
+            height: 300px;
+            position: relative;
+            margin-bottom: 20px;
+            display: none; /* Initially hidden */
+        }
+
+        .slides {
+            border-radius: 20px;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .slides.active {
+            opacity: 1;
+        }
+
+        .gradient-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg, pink, lightpink, hotpink);
+            background-size: 300% 300%;
+            animation: gradientAnimation 15s ease infinite;
+            z-index: 0;
+        }
+
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Gradient Background -->
+    <div class="gradient-background"></div>
+
+    <!-- Question Screen -->
+    <div id="questionScreen">
+        <div class="slideshow-container" id="slideshowContainer">
+            <!-- Slideshow Images -->
+            <img src="https://i.pinimg.com/170x/e8/4a/46/e84a463624e98ca3f4a4023b4c0f11e2.jpg" alt="Cat 1" class="slides active">
+            <img src="https://media.tenor.com/ns27oDL6PPIAAAAM/cats-cat-with-flower.gif" alt="Cat 2" class="slides">
+            <img src="https://media.tenor.com/Eog9WTKDMAkAAAAM/cat-and-flower.gif" alt="Cat 3" class="slides">
+            <img src="https://i.pinimg.com/1200x/5d/f4/8f/5df48fd37e439f6fdc0228a476ba6326.jpg" alt="Cat 4" class="slides">
+        </div>
+        <div class="title"><h1 id="questionText">Do you think you are beautiful?</h1></div>
+        <div class="buttons">
+            <button id="Yes">Yes</button>
+            <button id="No">No</button>
+        </div>
+    </div>
+
+    <!-- Add the audio element for the sound -->
+    <audio id="meowSound" src="https://www.dropbox.com/scl/fi/qepfkzk54dizlbasiiyc1/meow2.MP3?rlkey=0j7f0c5zp420l3ggjxdhl1458&st=gmz33thh&dl=1" preload="auto" autoplay></audio>
+
+
+    <script>
+        const questionText = document.getElementById('questionText');
+        const noButton = document.getElementById('No');
+        const yesButton = document.getElementById('Yes');
+        const meowSound = document.getElementById('meowSound');
+        const buttons = document.querySelector('.buttons');
+        const slideshowContainer = document.getElementById('slideshowContainer');
+        const slides = document.querySelectorAll('.slides');
+
+        // Define fixed positions for the No button
+        const positions = [
+            { x: 0, y: 0 }, // Top-left
+            { x: 200, y: 0 }, // Top-center
+            { x: 400, y: 0 }, // Top-right
+            { x: 0, y: 200 }, // Middle-left
+            { x: 200, y: 200 }, // Middle-center
+            { x: 400, y: 200 }, // Middle-right
+            { x: 0, y: 400 }, // Bottom-left
+            { x: 200, y: 400 }, // Bottom-center
+            { x: 400, y: 400 }  // Bottom-right
+        ];
+
+        // Move the No button to a random fixed position when hovered over or clicked
+        function moveNoButton() {
+            const randomIndex = Math.floor(Math.random() * positions.length);
+            const randomPosition = positions[randomIndex];
+            noButton.style.transform = `translate(${randomPosition.x}px, ${randomPosition.y}px)`;
+        }
+
+        noButton.addEventListener('mouseover', moveNoButton);
+        noButton.addEventListener('click', moveNoButton);
+
+        // Function to handle Yes button click
+        yesButton.addEventListener('click', () => {
+            meowSound.play();  // Play the sound
+
+            // Change the text and hide the buttons
+            questionText.textContent = "Flowers for you beautiful <3";
+            buttons.style.display = 'none';
+
+            // Reveal the slideshow and start the animation
+            slideshowContainer.style.display = 'block';
+
+            // Close the page after 33 seconds
+            setTimeout(() => {
+                window.close();
+            }, 33000);
+        });
+
+        // Slideshow functionality
+        let slideIndex = 0;
+        function showSlides() {
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active');
+                if (index === slideIndex) {
+                    slide.classList.add('active');
+                }
+            });
+            slideIndex = (slideIndex + 1) % slides.length;
+        }
+
+        setInterval(showSlides, 3000);  // Change image every 3 seconds
+    </script>
+</body>
+</html>
